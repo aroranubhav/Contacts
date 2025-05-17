@@ -52,12 +52,16 @@ dependencies {
     implementation(libs.androidx.material3)
 
     //lifecycle
+    implementation(libs.androidx.compose.viewmodel)
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.runtime)
 
     //hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+
+    //gson
+    implementation(libs.gson.converter)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
