@@ -7,8 +7,8 @@ data class Contact(
     val id: String = "",
     @SerializedName("name")
     val name: String = "",
-    @SerializedName("number")
-    val number: String = "",
-    @SerializedName("email")
-    val email: String? = ""
+    @SerializedName("numbers")
+    var numbers: ArrayList<String> = arrayListOf(),
+    @SerializedName("emails")
+    var emailIds: ArrayList<String> = arrayListOf()
 )
