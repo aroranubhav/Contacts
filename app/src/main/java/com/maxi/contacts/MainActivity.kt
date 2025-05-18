@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
 fun AppBar() {
     TopAppBar(
         title = {
-            Text(text = stringResource(R.string.contacts))
+            Text(text = stringResource(R.string.app_name))
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.onSurfaceVariant,
