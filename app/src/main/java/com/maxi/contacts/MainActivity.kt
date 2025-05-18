@@ -1,5 +1,8 @@
 package com.maxi.contacts
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +17,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.maxi.contacts.presentation.screens.ContactsScreen
 import com.maxi.contacts.presentation.ui.theme.ContactsTheme
@@ -59,5 +63,25 @@ fun AppBar() {
 
 @Composable
 fun App(modifier: Modifier) {
-    ContactsScreen(modifier)
+    val context = LocalContext.current
+    ContactsScreen(modifier,
+        onCallClicked = { number ->
+            launchCaller(context, number)
+        }, onEmailClicked = { email ->
+            launchEmailClient(context, email)
+        })
+}
+
+private fun launchCaller(context: Context, number: String) {
+    val intent = Intent(Intent.ACTION_DIAL).apply {
+        setData(Uri.parse("tel:$number"))
+    }
+    context.startActivity(intent)
+}
+
+private fun launchEmailClient(context: Context, email: String) {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        setData(Uri.parse("mailto:$email"))
+    }
+    context.startActivity(intent)
 }

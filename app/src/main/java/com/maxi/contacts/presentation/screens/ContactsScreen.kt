@@ -1,4 +1,8 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class
+)
 
 package com.maxi.contacts.presentation.screens
 
@@ -19,6 +23,7 @@ import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,7 +42,9 @@ import com.maxi.contacts.utils.UiState
 
 @Composable
 fun ContactsScreen(
-    modifier: Modifier
+    modifier: Modifier,
+    onCallClicked: (number: String) -> Unit,
+    onEmailClicked: (email: String) -> Unit
 ) {
     val viewModel: ContactsViewModel = viewModel()
     val state = viewModel.uiState.collectAsState()
@@ -45,7 +52,7 @@ fun ContactsScreen(
     when (state.value) {
         is UiState.Success -> {
             val contacts = (state.value as UiState.Success).data
-            LoadContacts(modifier, contacts)
+            LoadContacts(modifier, contacts, onCallClicked, onEmailClicked)
         }
 
         is UiState.Error -> {
@@ -71,7 +78,12 @@ fun ContactsScreen(
 }
 
 @Composable
-fun LoadContacts(modifier: Modifier, contacts: Map<String, List<Contact>>) {
+fun LoadContacts(
+    modifier: Modifier,
+    contacts: Map<String, List<Contact>>,
+    onCallClicked: (number: String) -> Unit,
+    onEmailClicked: (email: String) -> Unit
+) {
     LazyColumn(
         modifier
             .padding(6.dp)
@@ -91,14 +103,18 @@ fun LoadContacts(modifier: Modifier, contacts: Map<String, List<Contact>>) {
                 }
             }
             items(entry.value.size) {
-                ContactListItem(entry.value[it])
+                ContactListItem(entry.value[it], onCallClicked, onEmailClicked)
             }
         }
     }
 }
 
 @Composable
-fun ContactListItem(contact: Contact) {
+fun ContactListItem(
+    contact: Contact,
+    onCallClicked: (number: String) -> Unit,
+    onEmailClicked: (email: String) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -132,10 +148,16 @@ fun ContactListItem(contact: Contact) {
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp
                 )
-                Image(
-                    imageVector = Icons.Default.Call,
-                    contentDescription = null
-                )
+                IconButton(
+                    onClick = {
+                        onCallClicked(contact.numbers[0])
+                    }
+                ) {
+                    Image(
+                        imageVector = Icons.Default.Call,
+                        contentDescription = null
+                    )
+                }
             }
             if (contact.emailIds.size > 0) {
                 Row(
@@ -153,10 +175,16 @@ fun ContactListItem(contact: Contact) {
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp
                     )
-                    Image(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = null
-                    )
+                    IconButton(
+                        onClick = {
+                            onEmailClicked(contact.emailIds[0])
+                        }
+                    ) {
+                        Image(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }
@@ -166,5 +194,12 @@ fun ContactListItem(contact: Contact) {
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewContactListItem() {
-    ContactListItem(Contact(id = "", name = "Wtf", numbers = arrayListOf("03249824", "340584390", "234895"), emailIds = arrayListOf("wtf@wtf.in")))
+    ContactListItem(
+        Contact(
+            id = "",
+            name = "Wtf",
+            numbers = arrayListOf("03249824", "340584390", "234895"),
+            emailIds = arrayListOf("wtf@wtf.in")
+        ), {}, {}
+    )
 }
