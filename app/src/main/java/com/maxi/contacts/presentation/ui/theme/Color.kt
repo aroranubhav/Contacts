@@ -1,4 +1,4 @@
-package com.maxi.contacts.ui.theme
+package com.maxi.contacts.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
